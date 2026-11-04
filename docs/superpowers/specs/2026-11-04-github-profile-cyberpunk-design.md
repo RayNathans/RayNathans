@@ -176,12 +176,28 @@ Daftar vertikal bergaya log (markdown + badge kecil tanggal):
 - `2025-02 → 2025-08 · YOGYAKARTA` Frontend Developer (Volunteer) · Litera
   Sumbu Pakarti: sistem manajemen buku yayasan (peminjaman, donasi, inventaris);
   memimpin tim 3 developer; Laravel/PHP.
-- `2024 → 2025` Dicoding Indonesia: 9 kelas selesai.
+- `2025-02 → 2025-05` Dicoding Indonesia: 9 kelas selesai (dasar pemrograman
+  sampai Back-End dan Web Intermediate).
 - `<details><summary>ACCESS CERTIFICATES [09]</summary>` berisi 9 tautan
-  sertifikat `https://www.dicoding.com/certificates/<ID>` dengan judul kelasnya.
-  ID: 0LZ0RJ51KP65, 2VX3KQ6VJXYQ, 72ZD5MK9VZYW, ERZRE3KLQXYV, ERZRE720MXYV,
-  ERZREJR62XYV, JLX19M1MNP72, MEPJQ3G24X3V, NVP75WJ1RXR0. Pemetaan ID→judul
-  diambil dari halaman sertifikat masing-masing saat membangun.
+  `https://www.dicoding.com/certificates/<ID>`, urut tanggal terbit
+  (sudah diverifikasi dari halaman sertifikat, semua atas nama Nikolaus Ray
+  Nathan, berlaku 3 tahun):
+
+  | ID | Kelas | Terbit |
+  |---|---|---|
+  | 72ZD5MK9VZYW | Memulai Dasar Pemrograman untuk Menjadi Pengembang Software | 2025-02-15 |
+  | ERZRE720MXYV | Pengenalan ke Logika Pemrograman (Programming Logic 101) | 2025-02-15 |
+  | 0LZ0RJ51KP65 | Belajar Dasar Git dengan GitHub | 2025-02-16 |
+  | NVP75WJ1RXR0 | Belajar Dasar Pemrograman Web | 2025-02-24 |
+  | ERZRE3KLQXYV | Belajar Dasar Pemrograman JavaScript | 2025-03-08 |
+  | MEPJQ3G24X3V | Belajar Membuat Front-End Web untuk Pemula | 2025-03-21 |
+  | ERZREJR62XYV | Belajar Fundamental Front-End Web Development | 2025-04-17 |
+  | JLX19M1MNP72 | Belajar Back-End Pemula dengan JavaScript | 2025-05-16 |
+  | 2VX3KQ6VJXYQ | Belajar Pengembangan Web Intermediate | 2025-05-19 |
+
+  Catatan: daftar di mockup menyebut "React" dan "Dasar AI"; itu keliru dan
+  diganti dengan daftar nyata di atas. Fakta `[04]` di seksi Identity ikut
+  disesuaikan: "9 sertifikat Dicoding: Front-End, Back-End, Web Intermediate".
 
 ### 6.8 `06 // ESTABLISH CONNECTION`
 
@@ -230,11 +246,29 @@ RayNathans/            (repo RayNathans/RayNathans, cabang main)
 2. **Buy Me a Coffee / Saweria**: punya tautan? Kalau tidak, badge dihilangkan.
 3. **Repo sumber** untuk Fruch, Dicoding Story, dan SIPOLUBOGO POS (jika publik).
 4. **Status pekerjaan sekarang**: portofolio menulis Performa Optima Group
-   Ags 2025 – Feb 2026. Ditulis "→ NOW" atau "→ 2026-02"?
+   Ags 2025 – Feb 2026. Jawabannya memengaruhi lima tempat sekaligus: label
+   timeline (`→ NOW` atau `→ 2026-02`), sel status strip `COMPANY`, baris
+   terminal hero `status: building PWA … [RUNNING]`, nilai `sekarang` di
+   about.json, dan fakta `[01]`. Bila sudah tidak di sana: sel COMPANY diganti
+   `STATUS → OPEN TO WORK`, baris terminal jadi `status: open for new missions
+   [READY]`, `sekarang` jadi `"Open to work · Full Stack"`, fakta `[01]` memakai
+   periode tertutup.
 5. **Cara publikasi**: Nathan membuat repo kosong `RayNathans/RayNathans` di
    github.com lalu saya push lewat git (butuh login Git Credential Manager), atau
    memasang `gh` CLI dulu.
 6. Angka skill matrix: pakai angka mockup atau Nathan ingin mengubah?
+
+Keputusan pembangun yang sudah diambil (bukan pertanyaan lagi):
+
+- **Metadata profil (bagian 7)** diisi Nathan sendiri lewat Settings; tidak ada
+  token API yang diminta atau dipakai. Rencana diakhiri checklist serah-terima
+  dan verifikasi dilakukan setelah ia mengisinya.
+- **Layar sempit**: "pecah" berarti elemen tumpang-tindih, terpotong, atau teks
+  tak terbaca pada lebar ≥ 768 px. Di bawah itu, tabel GitHub boleh scroll
+  horizontal. Agar kartu proyek tetap utuh saat mengecil, seluruh kartu (ilustrasi,
+  judul, deskripsi, chip) digambar di dalam satu `proj-*.svg`; markdown hanya
+  menambah baris tautan LIVE/SOURCE di bawahnya. Seksi Identity dan Telemetry
+  tetap dua kolom.
 
 ## 10. Yang diserahkan ke pembangun
 
