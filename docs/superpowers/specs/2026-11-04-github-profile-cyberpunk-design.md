@@ -240,25 +240,33 @@ RayNathans/            (repo RayNathans/RayNathans, cabang main)
 - Commit dan PR **tanpa penanda atribusi apa pun** (aturan pribadi Nathan).
 - `.superpowers/` masuk `.gitignore`.
 
-## 9. Pertanyaan yang hanya bisa dijawab Nathan
+## 9. Pertanyaan terbuka dan keputusan yang diambil
 
-1. **Email publik** untuk badge EMAIL (atau dihapus saja?).
-2. **Buy Me a Coffee / Saweria**: punya tautan? Kalau tidak, badge dihilangkan.
-3. **Repo sumber** untuk Fruch, Dicoding Story, dan SIPOLUBOGO POS (jika publik).
-4. **Status pekerjaan sekarang**: portofolio menulis Performa Optima Group
-   Ags 2025 – Feb 2026. Jawabannya memengaruhi lima tempat sekaligus: label
-   timeline (`→ NOW` atau `→ 2026-02`), sel status strip `COMPANY`, baris
-   terminal hero `status: building PWA … [RUNNING]`, nilai `sekarang` di
-   about.json, dan fakta `[01]`. Bila sudah tidak di sana: sel COMPANY diganti
-   `STATUS → OPEN TO WORK`, baris terminal jadi `status: open for new missions
-   [READY]`, `sekarang` jadi `"Open to work · Full Stack"`, fakta `[01]` memakai
-   periode tertutup.
-5. **Cara publikasi**: Nathan membuat repo kosong `RayNathans/RayNathans` di
-   github.com lalu saya push lewat git (butuh login Git Credential Manager), atau
-   memasang `gh` CLI dulu.
-6. Angka skill matrix: pakai angka mockup atau Nathan ingin mengubah?
+Nathan meminta semuanya dikerjakan sampai selesai tanpa putaran tanya jawab
+lagi (2026-11-04). Keputusan di bawah adalah **asumsi pembangun**; semuanya
+mudah diubah lewat `data/profile.json` dan dicatat di checklist serah-terima.
 
-Keputusan pembangun yang sudah diambil (bukan pertanyaan lagi):
+1. **Email publik**: badge EMAIL memakai `nikolausraynathan@gmail.com`
+   (alamat yang sudah dipakai Nathan di konfigurasi git dan karenanya sudah
+   tampil di commit publiknya). Ditandai di serah-terima agar bisa dihapus.
+2. **Buy Me a Coffee / Saweria**: tidak ada tautan yang diketahui → badge
+   **dihilangkan**.
+3. **Repo sumber** proyek: tidak ada repo publik yang cocok di akun
+   (hanya `testdemo`, `litera`, `present`) → kartu hanya menampilkan LIVE DEMO.
+4. **Status pekerjaan**: ditulis **masih berjalan** (`2025-08 → NOW`), sesuai
+   mockup yang disetujui dan alamat email kerja Performa Optima Group yang masih
+   dipakai Nathan. Bila ternyata sudah selesai, ubah `profile.json`
+   (`current_job: false`) lalu jalankan build; generator otomatis mengganti lima
+   tempat terdampak (timeline, sel COMPANY → `STATUS: OPEN TO WORK`, baris
+   terminal hero → `status: open for new missions [READY]`, `sekarang` di
+   about.json, fakta `[01]`).
+5. **Cara publikasi**: tidak ada `gh` dan tidak ada token. Semua dibangun dan
+   di-commit lokal. Push dicoba ke `https://github.com/RayNathans/RayNathans.git`;
+   bila repo belum ada, serah-terima berisi satu langkah untuk Nathan: buat repo
+   publik kosong bernama `RayNathans`, lalu push diulang.
+6. **Angka skill matrix**: memakai angka mockup.
+
+Keputusan pembangun lain:
 
 - **Metadata profil (bagian 7)** diisi Nathan sendiri lewat Settings; tidak ada
   token API yang diminta atau dipakai. Rencana diakhiri checklist serah-terima
