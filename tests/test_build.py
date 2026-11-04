@@ -83,5 +83,17 @@ class HeaderFooterTests(unittest.TestCase):
         self.assertTrue(no_external(s))
 
 
+class SkillsTests(unittest.TestCase):
+    def test_rows_and_segments(self):
+        skills = load_data()["skills"]
+        s = build.build_skills(skills)
+        ET.fromstring(s)
+        self.assertEqual(s.count('class="seg on"'), sum(round(x["pct"] / 5) for x in skills))
+        self.assertEqual(s.count('class="seg off"'), 20 * len(skills) - sum(round(x["pct"] / 5) for x in skills))
+        for name in ("PHP", "98%", "Supabase", "75%", "SELF-ASSESSMENT"):
+            self.assertTrue(name in s, f"teks hilang: {name}")
+        self.assertTrue(no_external(s))
+
+
 if __name__ == "__main__":
     unittest.main()

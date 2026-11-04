@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 {{height}}" width="100%" role="img" aria-label="Skill matrix: {{names}}">
+<style>
+{{style}}
+.seg.on{opacity:0;animation:light .35s ease-out forwards,pulse 3s ease-in-out infinite;animation-delay:var(--d),calc(var(--d) + 1s)}
+@keyframes light{from{opacity:0;transform:scaleY(.2)}to{opacity:1;transform:scaleY(1)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+.seg{transform-box:fill-box;transform-origin:center}
+.pct{animation:fade .6s ease-out forwards;opacity:0;animation-delay:var(--d)}
+@keyframes fade{to{opacity:1}}
+</style>
+<rect width="1200" height="{{height}}" fill="#03040d"/>
+<rect x="0" y="0" width="1200" height="{{height}}" fill="none" stroke="#15214a"/>
+<text x="1184" y="22" text-anchor="end" class="mono" font-size="11" fill="#7f93c4" letter-spacing="1">SELF-ASSESSMENT · EDIT data/skills.json</text>
+{{rows}}
+</svg>

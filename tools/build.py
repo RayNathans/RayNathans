@@ -134,6 +134,52 @@ def build_footer() -> str:
     return svgkit.render("footer.svg", style=svgkit.base_style())
 
 
+# ---------------------------------------------------------------- skill matrix
+_SK_ROW_H = 52
+_SK_TOP = 40
+_SK_COLS = (30, 610)  # x awal tiap kolom
+_SK_SEG_W, _SK_SEG_GAP, _SK_SEGS = 16, 3, 20
+
+
+def build_skills(skills: list[dict]) -> str:
+    per_col = (len(skills) + 1) // 2
+    height = _SK_TOP + per_col * _SK_ROW_H + 12
+    rows = []
+    for i, sk in enumerate(skills):
+        col, row = divmod(i, per_col)
+        x0 = _SK_COLS[col]
+        y = _SK_TOP + row * _SK_ROW_H
+        on = round(sk["pct"] / 5)
+        bar_x = x0 + 120
+        segs = []
+        for s in range(_SK_SEGS):
+            sx = bar_x + s * (_SK_SEG_W + _SK_SEG_GAP)
+            if s < on:
+                fill = PALETTE["c3"] if s >= 16 else PALETTE["c1"]
+                segs.append(
+                    f'<rect class="seg on" x="{sx}" y="{y + 14}" width="{_SK_SEG_W}" height="12" fill="{fill}" '
+                    f'style="--d:{(i * 60 + s * 40) / 1000:.2f}s"/>'
+                )
+            else:
+                segs.append(
+                    f'<rect class="seg off" x="{sx}" y="{y + 14}" width="{_SK_SEG_W}" height="12" '
+                    f'fill="{PALETTE["panel"]}" stroke="{PALETTE["line"]}"/>'
+                )
+        rows.append(
+            f'<text x="{x0}" y="{y + 25}" class="mono" font-size="15" fill="{PALETTE["ink"]}">{esc(sk["name"])}</text>'
+            + "".join(segs)
+            + f'<text class="pct mono" x="{bar_x + _SK_SEGS * (_SK_SEG_W + _SK_SEG_GAP) + 8}" y="{y + 25}" '
+            f'font-size="14" fill="{PALETTE["c1"]}" style="--d:{(i * 60 + on * 40) / 1000:.2f}s">{sk["pct"]}%</text>'
+        )
+    return svgkit.render(
+        "skills.svg",
+        style=svgkit.base_style(),
+        height=str(height),
+        names=esc(", ".join(s["name"] for s in skills)),
+        rows="\n".join(rows),
+    )
+
+
 # ---------------------------------------------------------------- output
 def write(name: str, content: str, out: Path | None = None) -> Path:
     root = out or svgkit.ROOT
@@ -149,6 +195,7 @@ def main(out: Path | None = None) -> None:
     for idx, title in SECTIONS:
         write(f"h-{idx}.svg", build_header(idx, title), out)
     write("footer.svg", build_footer(), out)
+    write("skills.svg", build_skills(data["skills"]), out)
     print("build selesai")
 
 
