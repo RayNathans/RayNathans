@@ -1,0 +1,24 @@
+{
+  "name": "Nikolaus Ray Nathan",
+  "handle": "RayNathans",
+  "role": "Full Stack Developer",
+  "current_job": true,
+  "job": {
+    "title": "Backend Developer",
+    "company": "Performa Optima Group",
+    "city": "SURABAYA",
+    "start": "2025-08",
+    "end": "2026-02",
+    "desc": "Membangun aplikasi PWA untuk otomasi laporan teknisi. Next.js, Python, PostgreSQL, TypeScript."
+  },
+  "stack": ["Laravel", "Next.js", "TypeScript", "PostgreSQL"],
+  "learning": "PWA & arsitektur backend yang rapi",
+  "motto": "Kode bersih hari ini, tidur nyenyak besok",
+  "city": "Surabaya, Indonesia",
+  "bio": "Full Stack Developer · Laravel · Next.js · PostgreSQL. Membangun sistem yang cepat, rapi, dan tahan banting.",
+  "links": {
+    "linkedin": "https://www.linkedin.com/in/nikolaus-ray-nathan/",
+    "portfolio": "https://nathporto.netlify.app/",
+    "email": "nikolausraynathan@gmail.com"
+  }
+}

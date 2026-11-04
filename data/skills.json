@@ -1,0 +1,14 @@
+[
+  {"name": "Laravel", "pct": 87, "badge": {"logo": "laravel", "color": "FF2D20", "url": "https://laravel.com/"}},
+  {"name": "Next.js", "pct": 90, "badge": {"logo": "nextdotjs", "color": "ffffff", "url": "https://nextjs.org/"}},
+  {"name": "TypeScript", "pct": 85, "badge": {"logo": "typescript", "color": "3178C6", "url": "https://www.typescriptlang.org/"}},
+  {"name": "React", "pct": 95, "badge": {"logo": "react", "color": "61DAFB", "url": "https://react.dev/"}},
+  {"name": "PHP", "pct": 98, "badge": {"logo": "php", "color": "777BB4", "url": "https://www.php.net/"}},
+  {"name": "PostgreSQL", "pct": 85, "badge": {"logo": "postgresql", "color": "4169E1", "url": "https://www.postgresql.org/"}},
+  {"name": "MySQL", "pct": 90, "badge": {"logo": "mysql", "color": "4479A1", "url": "https://www.mysql.com/"}},
+  {"name": "Tailwind", "pct": 95, "badge": {"logo": "tailwindcss", "color": "06B6D4", "url": "https://tailwindcss.com/"}},
+  {"name": "Python", "pct": 70, "badge": {"logo": "python", "color": "3776AB", "url": "https://www.python.org/"}},
+  {"name": "Node.js", "pct": 85, "badge": {"logo": "nodedotjs", "color": "5FA04E", "url": "https://nodejs.org/"}},
+  {"name": "Git", "pct": 92, "badge": {"logo": "git", "color": "F05032", "url": "https://git-scm.com/"}},
+  {"name": "Supabase", "pct": 75, "badge": {"logo": "supabase", "color": "3FCF8E", "url": "https://supabase.com/"}}
+]

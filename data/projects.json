@@ -1,0 +1,29 @@
+[
+  {
+    "id": "fruch",
+    "title": "FRUIT CHECK // FRUCH",
+    "status": "DEPLOYED",
+    "desc": "Deteksi kematangan & manfaat buah berbasis AI. Antarmuka minimalis dan aksesibel.",
+    "stack": ["Next.js", "React", "TypeScript", "Tailwind"],
+    "live": "https://dicoding-milestone-fruch.vercel.app/",
+    "art": "proj-art-fruch.svg"
+  },
+  {
+    "id": "story",
+    "title": "DICODING STORY",
+    "status": "DEPLOYED",
+    "desc": "Jelajahi cerita komunitas dengan geolokasi, pencarian, dan filter.",
+    "stack": ["JavaScript", "REST API", "Tailwind"],
+    "live": "https://nathdicodingstory.netlify.app/",
+    "art": "proj-art-story.svg"
+  },
+  {
+    "id": "pos",
+    "title": "SIPOLUBOGO POS",
+    "status": "IN PRODUCTION",
+    "desc": "Website restoran + sistem kasir: menu, member, transaksi. Dibangun ulang dari nol.",
+    "stack": ["Laravel", "PHP", "MySQL", "Tailwind"],
+    "live": "https://sipolubogo.cartera.my.id/",
+    "art": "proj-art-pos.svg"
+  }
+]
