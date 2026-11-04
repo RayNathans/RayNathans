@@ -95,5 +95,25 @@ class SkillsTests(unittest.TestCase):
         self.assertTrue(no_external(s))
 
 
+class ProjectTests(unittest.TestCase):
+    def test_three_cards(self):
+        for p in load_data()["projects"]:
+            s = build.build_project(p)
+            ET.fromstring(s)
+            self.assertTrue(p["title"] in s, p["title"])
+            self.assertTrue(p["status"] in s, p["status"])
+            for t in p["stack"]:
+                self.assertTrue(t in s, t)
+            self.assertIn("LIVE DEMO", s)
+            self.assertTrue(no_external(s), p["id"])
+
+    def test_wrap(self):
+        self.assertEqual(
+            build.wrap_text("Deteksi kematangan & manfaat buah berbasis AI. Antarmuka minimalis dan aksesibel.", 46),
+            ["Deteksi kematangan & manfaat buah berbasis AI.", "Antarmuka minimalis dan aksesibel."],
+        )
+        self.assertEqual(build.wrap_text("satu dua tiga", 7), ["satu", "dua", "tiga"])
+
+
 if __name__ == "__main__":
     unittest.main()

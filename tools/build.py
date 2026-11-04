@@ -180,6 +180,63 @@ def build_skills(skills: list[dict]) -> str:
     )
 
 
+# ---------------------------------------------------------------- kartu proyek
+def wrap_text(s: str, max_chars: int) -> list[str]:
+    """Penggalan kata sederhana: tiap baris <= max_chars karakter."""
+    lines: list[str] = []
+    cur = ""
+    for word in s.split():
+        cand = f"{cur} {word}".strip()
+        if cur and len(cand) > max_chars:
+            lines.append(cur)
+            cur = word
+        else:
+            cur = cand
+    if cur:
+        lines.append(cur)
+    return lines
+
+
+def _chips(stack: list[str], y: int) -> str:
+    out = []
+    x = 16
+    for t in stack:
+        w = 7 * len(t) + 14
+        out.append(
+            f'<rect x="{x}" y="{y}" width="{w}" height="18" fill="none" stroke="{PALETTE["c2"]}" rx="2"/>'
+            f'<text x="{x + w / 2:.0f}" y="{y + 13}" text-anchor="middle" class="mono" font-size="10" fill="{PALETTE["ink"]}">{esc(t)}</text>'
+        )
+        x += w + 6
+    return "".join(out)
+
+
+def build_project(p: dict) -> str:
+    art = (svgkit.TEMPLATES / p["art"]).read_text(encoding="utf-8")
+    desc_lines = wrap_text(p["desc"], 46)[:3]
+    desc = "".join(
+        f'<text x="16" y="{200 + i * 17}" class="mono" font-size="12" fill="{PALETTE["muted"]}">{esc(line)}</text>'
+        for i, line in enumerate(desc_lines)
+    )
+    st_color = PALETTE["ok"] if p["status"] == "DEPLOYED" else PALETTE["c3"]
+    st_w = 7 * len(p["status"]) + 18
+    st_x = 400 - 12 - st_w
+    return svgkit.render(
+        "project.svg",
+        style=svgkit.base_style(),
+        art=art,
+        title=esc(p["title"]),
+        desc_plain=esc(p["desc"]),
+        desc=desc,
+        chips=_chips(p["stack"], 250),
+        status=esc(p["status"]),
+        st_color=st_color,
+        st_w=str(st_w),
+        st_x=str(st_x),
+        st_tx=f"{st_x + st_w / 2:.0f}",
+        id_label=esc(f"MISSION // {p['id'].upper()}"),
+    )
+
+
 # ---------------------------------------------------------------- output
 def write(name: str, content: str, out: Path | None = None) -> Path:
     root = out or svgkit.ROOT
@@ -196,6 +253,8 @@ def main(out: Path | None = None) -> None:
         write(f"h-{idx}.svg", build_header(idx, title), out)
     write("footer.svg", build_footer(), out)
     write("skills.svg", build_skills(data["skills"]), out)
+    for p in data["projects"]:
+        write(f"proj-{p['id']}.svg", build_project(p), out)
     print("build selesai")
 
 

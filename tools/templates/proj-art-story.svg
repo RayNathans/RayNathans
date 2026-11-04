@@ -1,0 +1,13 @@
+<g transform="translate(0,16)">
+  <g stroke="#2f6bff" stroke-width="1" opacity=".45">
+    <line x1="0" y1="30" x2="400" y2="30"/><line x1="0" y1="60" x2="400" y2="60"/><line x1="0" y1="90" x2="400" y2="90"/><line x1="0" y1="120" x2="400" y2="120"/>
+    <line x1="60" y1="0" x2="60" y2="140"/><line x1="120" y1="0" x2="120" y2="140"/><line x1="180" y1="0" x2="180" y2="140"/><line x1="240" y1="0" x2="240" y2="140"/><line x1="300" y1="0" x2="300" y2="140"/><line x1="360" y1="0" x2="360" y2="140"/>
+  </g>
+  <circle cx="200" cy="64" r="30" fill="none" stroke="#ff2bd6" class="pulse-line"/>
+  <circle cx="200" cy="64" r="7" fill="#ff2bd6" class="blip"/>
+  <circle cx="110" cy="40" r="5" fill="#00e5ff"/><circle cx="300" cy="96" r="5" fill="#00e5ff"/><circle cx="330" cy="36" r="3" fill="#00e5ff" opacity=".7"/>
+  <line x1="116" y1="42" x2="193" y2="62" stroke="#00e5ff" opacity=".7"/><line x1="207" y1="66" x2="295" y2="94" stroke="#00e5ff" opacity=".7"/>
+  <rect x="236" y="20" width="150" height="20" fill="#02050f" stroke="#00e5ff" opacity=".9"/>
+  <text x="243" y="34" font-size="10" fill="#00e5ff" class="mono">GEO-TAG: -7.25, 112.75</text>
+  <text x="14" y="128" font-size="10" fill="#7f93c4" class="mono">stories: 128 · filter: nearby</text>
+</g>
