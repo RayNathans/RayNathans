@@ -115,5 +115,83 @@ class ProjectTests(unittest.TestCase):
         self.assertEqual(build.wrap_text("satu dua tiga", 7), ["satu", "dua", "tiga"])
 
 
+class ReadmeTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.d = load_data()
+        cls.md = build.build_readme(cls.d)
+
+    def test_badge_escape(self):
+        self.assertEqual(
+            build.badge("ROLE", "BACKEND_DEV", "00e5ff"),
+            "https://img.shields.io/badge/ROLE-BACKEND__DEV-00e5ff?style=for-the-badge&labelColor=0a0f24",
+        )
+        self.assertEqual(
+            build.badge("", "Next.js", "0a0f24", logo="nextdotjs", logo_color="ffffff"),
+            "https://img.shields.io/badge/Next.js-0a0f24?style=for-the-badge&labelColor=0a0f24&logo=nextdotjs&logoColor=ffffff",
+        )
+        self.assertIn("PERFORMA%20OPTIMA%20GROUP", build.badge("COMPANY", "PERFORMA OPTIMA GROUP", "2f6bff"))
+        self.assertIn("REST--API", build.badge("", "REST-API", "0a0f24"))
+
+    def test_sections_and_assets(self):
+        for a in [
+            "assets/hero.svg", "assets/h-01.svg", "assets/h-02.svg", "assets/h-03.svg", "assets/h-04.svg",
+            "assets/h-05.svg", "assets/h-06.svg", "assets/skills.svg", "assets/proj-fruch.svg",
+            "assets/proj-story.svg", "assets/proj-pos.svg", "assets/footer.svg",
+            "readme-typing-svg.demolab.com", "github-readme-stats.vercel.app/api?username=RayNathans",
+            "api/top-langs/?username=RayNathans", "streak-stats.demolab.com?user=RayNathans",
+            "raw.githubusercontent.com/RayNathans/RayNathans/output/github-snake.svg",
+            "komarev.com/ghpvc/?username=RayNathans",
+        ]:
+            self.assertTrue(a in self.md, f"hilang: {a}")
+
+    def test_links(self):
+        self.assertNotIn('href="#"', self.md)
+        self.assertNotIn("](#)", self.md)
+        for u in [
+            "https://dicoding-milestone-fruch.vercel.app/", "https://nathdicodingstory.netlify.app/",
+            "https://sipolubogo.cartera.my.id/", "https://www.linkedin.com/in/nikolaus-ray-nathan/",
+            "https://nathporto.netlify.app/", "mailto:nikolausraynathan@gmail.com",
+        ]:
+            self.assertTrue(u in self.md, f"hilang: {u}")
+
+    def test_certs(self):
+        self.assertEqual(self.md.count("https://www.dicoding.com/certificates/"), 9)
+        self.assertIn("Belajar Pengembangan Web Intermediate", self.md)
+        certs_block = self.md.split("ACCESS CERTIFICATES")[1].split("</details>")[0]
+        self.assertNotIn("React", certs_block)
+        self.assertNotIn("Dasar AI", certs_block)
+
+    def test_about_and_facts(self):
+        self.assertIn('"sekarang": "Backend Dev @ Performa Optima Group"', self.md)
+        self.assertIn('"kopi": true', self.md)
+        self.assertIn("9 sertifikat Dicoding: Front-End, Back-End, Web Intermediate", self.md)
+        self.assertIn("2025-08 → NOW · SURABAYA", self.md)
+
+    def test_no_loc_uptime_no_coffee_no_fake_numbers(self):
+        self.assertNotIn("UPTIME", self.md)
+        self.assertNotIn("COFFEE", self.md.upper())
+        self.assertNotIn("1,204", self.md)
+
+    def test_images_have_alt(self):
+        import re
+        imgs = re.findall(r"<img[^>]*>", self.md)
+        self.assertGreater(len(imgs), 10)
+        for tag in imgs:
+            self.assertIn("alt=", tag, tag[:80])
+
+    def test_current_job_toggle_changes_five_places(self):
+        d = dict(self.d, profile=dict(self.d["profile"], current_job=False))
+        md = build.build_readme(d)
+        self.assertIn("STATUS-OPEN%20TO%20WORK", md)
+        self.assertIn("2025-08 → 2026-02 · SURABAYA", md)
+        self.assertIn('"sekarang": "Open to work · Full Stack"', md)
+        self.assertIn("(Ags 2025 – Feb 2026)", md)
+        self.assertNotIn("COMPANY-PERFORMA%20OPTIMA%20GROUP", md)
+        hero = build.build_hero(d)
+        self.assertIn("[READY]", hero)
+        self.assertNotIn("[RUNNING]", hero)
+
+
 if __name__ == "__main__":
     unittest.main()

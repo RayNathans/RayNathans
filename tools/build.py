@@ -6,7 +6,9 @@ from __future__ import annotations
 
 import random
 import sys
+from html import escape as html_escape
 from pathlib import Path
+from urllib.parse import quote, quote_plus
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -237,6 +239,108 @@ def build_project(p: dict) -> str:
     )
 
 
+# ---------------------------------------------------------------- README
+_SHIELDS = "https://img.shields.io/badge/"
+_USER = "RayNathans"
+
+
+def _shield_text(s: str) -> str:
+    return quote(s.replace("-", "--").replace("_", "__"), safe="-_.~")
+
+
+def badge(label: str, value: str, color: str, logo: str | None = None, logo_color: str = "white") -> str:
+    path = (_shield_text(label) + "-" if label else "") + _shield_text(value) + "-" + color
+    url = f"{_SHIELDS}{path}?style=for-the-badge&labelColor={PALETTE['panel'][1:]}"
+    if logo:
+        url += f"&logo={logo}&logoColor={logo_color}"
+    return url
+
+
+def typing_url() -> str:
+    lines = ["nathan@github:~$ whoami", "nathan@github:~$ cat about.json",
+             "nathan@github:~$ ./deploy --prod", "nathan@github:~$ git push origin main"]
+    return (
+        "https://readme-typing-svg.demolab.com?font=Share+Tech+Mono&size=18&duration=2600&pause=800"
+        "&color=00E5FF&background=00000000&center=true&vCenter=true&width=700&height=40&lines="
+        + ";".join(quote_plus(l) for l in lines)
+    )
+
+
+def stats_urls() -> dict:
+    c = {k: v[1:] for k, v in PALETTE.items()}
+    return {
+        "stats_url": (
+            f"https://github-readme-stats.vercel.app/api?username={_USER}&show_icons=true&hide_border=false"
+            f"&bg_color={c['bg']}&border_color={c['line']}&title_color={c['c1']}&text_color={c['ink']}"
+            f"&icon_color={c['c3']}&ring_color={c['c2']}&rank_icon=percentile&include_all_commits=true&cache_seconds=86400"
+        ),
+        "streak_url": (
+            f"https://streak-stats.demolab.com?user={_USER}&background={c['bg']}&border={c['line']}&stroke={c['line']}"
+            f"&ring={c['c2']}&fire={c['c3']}&currStreakNum={c['c1']}&sideNums={c['ink']}&currStreakLabel={c['c1']}"
+            f"&sideLabels={c['muted']}&dates={c['muted']}"
+        ),
+        "langs_url": (
+            f"https://github-readme-stats.vercel.app/api/top-langs/?username={_USER}&layout=compact&langs_count=6"
+            f"&bg_color={c['bg']}&border_color={c['line']}&title_color={c['c1']}&text_color={c['ink']}"
+        ),
+        "snake_url": f"https://raw.githubusercontent.com/{_USER}/{_USER}/output/github-snake.svg",
+        "komarev": f"https://komarev.com/ghpvc/?username={_USER}&style=for-the-badge&color={c['c1']}&label=PROFILE+VIEWS",
+    }
+
+
+def build_readme(data: dict) -> str:
+    p = data["profile"]
+    js = job_strings(p)
+    h = html_escape
+    skill_badges = "\n".join(
+        f'  <a href="{s["badge"]["url"]}"><img src="{badge("", s["name"], PALETTE["panel"][1:], s["badge"]["logo"], s["badge"]["color"])}" alt="{h(s["name"])}"></a>'
+        for s in data["skills"]
+    )
+    project_cells = "\n".join(
+        f'<td width="33%" valign="top">\n'
+        f'<a href="{pr["live"]}"><img src="assets/proj-{pr["id"]}.svg" width="100%" alt="{h(pr["title"])}: {h(pr["desc"])}"></a>\n'
+        f'<p align="center"><a href="{pr["live"]}">▸ LIVE DEMO</a></p>\n</td>'
+        for pr in data["projects"]
+    )
+    cert_list = "\n".join(
+        f'<li><a href="https://www.dicoding.com/certificates/{c["id"]}">{h(c["title"])}</a> · <code>{c["date"]}</code></li>'
+        for c in data["certs"]
+    )
+    cert_list = "<ul>\n" + cert_list + "\n</ul>"
+    vals = dict(
+        typing_url=typing_url(),
+        b_role=badge("ROLE", "BACKEND_DEV", PALETTE["c1"][1:]),
+        b_strip=badge(js["strip_label"], js["strip_value"], PALETTE["c2"][1:]),
+        b_certs=badge("CERTS", "09 · DICODING", PALETTE["c3"][1:]),
+        strip_label=js["strip_label"],
+        strip_value=js["strip_value"],
+        name=p["name"],
+        role=p["role"],
+        about_now=js["about_now"],
+        city=p["city"],
+        stack_json=", ".join(f'"{s}"' for s in p["stack"]),
+        learning=p["learning"],
+        motto=p["motto"],
+        fact01=js["fact01"],
+        skill_names=h(", ".join(s["name"] for s in data["skills"])),
+        skill_badges=skill_badges,
+        project_cells=project_cells,
+        timeline_when=js["timeline_when"],
+        job_title=p["job"]["title"],
+        company=p["job"]["company"],
+        job_desc=p["job"]["desc"],
+        cert_list=cert_list,
+        linkedin=p["links"]["linkedin"],
+        portfolio=p["links"]["portfolio"],
+        email=p["links"]["email"],
+        b_linkedin=badge("", "LINKEDIN", "0a66c2", "linkedin", "white"),
+        b_portfolio=badge("", "PORTFOLIO", PALETTE["c1"][1:], "netlify", "03040d"),
+        b_email=badge("", "EMAIL", PALETTE["c3"][1:], "gmail", "white"),
+        **stats_urls(),
+    )
+    return svgkit.render("README.md.tpl", **vals)
+
+
 # ---------------------------------------------------------------- output
 def write(name: str, content: str, out: Path | None = None) -> Path:
     root = out or svgkit.ROOT
@@ -255,6 +359,7 @@ def main(out: Path | None = None) -> None:
     write("skills.svg", build_skills(data["skills"]), out)
     for p in data["projects"]:
         write(f"proj-{p['id']}.svg", build_project(p), out)
+    write("README.md", build_readme(data), out)
     print("build selesai")
 
 
