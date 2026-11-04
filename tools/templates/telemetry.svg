@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" width="100%" role="img" aria-label="{{aria}}">
+<style>
+{{style}}
+.ring{stroke-dasharray:{{ring_len}};stroke-dashoffset:{{ring_len}};animation:draw 1.6s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:{{ring_off}}}}
+.ring2{stroke-dasharray:{{ring2_len}};stroke-dashoffset:{{ring2_len}};animation:draw2 1.6s .3s ease-out forwards}
+@keyframes draw2{to{stroke-dashoffset:{{ring2_off}}}}
+.fire{animation:fire 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes fire{0%,100%{transform:scale(1)}50%{transform:scale(1.12,1.2)}}
+.lang-seg{transform-box:fill-box;transform-origin:left;animation:grow .9s ease-out both}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.row{opacity:0;animation:show .5s ease-out forwards}
+@keyframes show{to{opacity:1}}
+.blip{animation:blip 2s ease-in-out infinite}
+@keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+@media (prefers-reduced-motion: reduce){.row{opacity:1!important}.ring{stroke-dashoffset:{{ring_off}}!important}.ring2{stroke-dashoffset:{{ring2_off}}!important}}
+</style>
+<rect width="1200" height="340" fill="#0d1117"/>
+<!-- panel 1: stats -->
+<rect x=".5" y=".5" width="386" height="309" fill="#0a0f24" stroke="#15214a"/>
+<path d="M1 12 L1 1 L12 1" fill="none" stroke="#00e5ff" stroke-width="2"/>
+<text x="18" y="26" class="orb" font-size="13" fill="#dbe7ff" letter-spacing="3">GITHUB STATS</text>
+<rect class="blip" x="360" y="16" width="8" height="8" fill="#00e5ff"/>
+<line x1="18" y1="38" x2="368" y2="38" stroke="#15214a"/>
+{{stat_rows}}
+<g transform="translate(318,112)">
+  <circle r="42" fill="none" stroke="#15214a" stroke-width="6"/>
+  <circle class="ring" r="42" fill="none" stroke="#2f6bff" stroke-width="6" stroke-linecap="round" transform="rotate(-90)"/>
+  <text y="-2" text-anchor="middle" class="orb" font-size="13" fill="#00e5ff">{{since_year}}</text>
+  <text y="13" text-anchor="middle" class="mono" font-size="9" fill="#7f93c4" letter-spacing="1">SINCE</text>
+</g>
+<!-- panel 2: streak -->
+<rect x="406.5" y=".5" width="386" height="309" fill="#0a0f24" stroke="#15214a"/>
+<text x="424" y="26" class="orb" font-size="13" fill="#dbe7ff" letter-spacing="3">CONTRIBUTION STREAK</text>
+<rect class="blip" x="766" y="16" width="8" height="8" fill="#ff2bd6" style="animation-delay:-.7s"/>
+<line x1="424" y1="38" x2="774" y2="38" stroke="#15214a"/>
+<g class="row" style="animation-delay:.2s">
+  <text x="470" y="150" text-anchor="middle" class="orb" font-size="34" fill="#dbe7ff">{{s_total}}</text>
+  <text x="470" y="172" text-anchor="middle" class="mono" font-size="11" fill="#7f93c4" letter-spacing="1">TOTAL · 12 BLN</text>
+  <text x="470" y="190" text-anchor="middle" class="mono" font-size="9" fill="#7f93c4">{{s_range}}</text>
+</g>
+<g transform="translate(599,150)" class="row" style="animation-delay:.4s">
+  <circle r="54" fill="none" stroke="#15214a" stroke-width="5"/>
+  <circle class="ring2" r="54" fill="none" stroke="#ff2bd6" stroke-width="5" stroke-linecap="round" transform="rotate(-90)"/>
+  <path class="fire" d="M0 -66 c6 8 9 14 4 20 c6 -3 8 -9 7 -14 c6 8 6 20 -4 26 c-10 6 -22 -2 -20 -14 c1 -7 7 -10 13 -18z" fill="#ff2bd6" opacity=".9"/>
+  <text y="8" text-anchor="middle" class="orb" font-size="30" fill="#ff2bd6">{{s_current}}</text>
+  <text y="30" text-anchor="middle" class="mono" font-size="10" fill="#dbe7ff" letter-spacing="1">CURRENT</text>
+  <text y="76" text-anchor="middle" class="mono" font-size="9" fill="#7f93c4">{{s_current_range}}</text>
+</g>
+<g class="row" style="animation-delay:.6s">
+  <text x="728" y="150" text-anchor="middle" class="orb" font-size="34" fill="#dbe7ff">{{s_longest}}</text>
+  <text x="728" y="172" text-anchor="middle" class="mono" font-size="11" fill="#7f93c4" letter-spacing="1">LONGEST</text>
+  <text x="728" y="190" text-anchor="middle" class="mono" font-size="9" fill="#7f93c4">{{s_longest_range}}</text>
+</g>
+<!-- panel 3: languages -->
+<rect x="812.5" y=".5" width="387" height="309" fill="#0a0f24" stroke="#15214a"/>
+<path d="M1199 298 L1199 309 L1188 309" fill="none" stroke="#00e5ff" stroke-width="2"/>
+<text x="830" y="26" class="orb" font-size="13" fill="#dbe7ff" letter-spacing="3">TOP LANGUAGES</text>
+<line x1="830" y1="38" x2="1182" y2="38" stroke="#15214a"/>
+<rect x="830" y="52" width="{{bar_w}}" height="10" fill="#15214a"/>
+{{lang_bar}}
+{{lang_rows}}
+<text x="1182" y="296" text-anchor="end" class="mono" font-size="9" fill="#7f93c4">repo milik sendiri · byte per bahasa</text>
+<text x="600" y="330" text-anchor="middle" class="mono" font-size="10" fill="#7f93c4" letter-spacing="1">&gt; DATA SYNC {{updated}} · sumber api.github.com · diperbarui otomatis tiap 12 jam</text>
+</svg>

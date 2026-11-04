@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 {{height}}" width="100%" role="img" aria-label="Timeline: {{aria}}">
+<style>
+{{style}}
+.node{animation:node 2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes node{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.75)}}
+.now{animation:now 1.4s ease-in-out infinite}
+@keyframes now{0%,100%{opacity:.9;r:9}50%{opacity:.2;r:16}}
+.beam{animation:beam 3.5s linear infinite}
+@keyframes beam{from{transform:translateY(-80px)}to{transform:translateY({{height}}px)}}
+.ent{opacity:0;animation:show .6s ease-out forwards}
+@keyframes show{to{opacity:1}}
+@media (prefers-reduced-motion: reduce){.ent{opacity:1!important}}
+</style>
+<defs>
+  <linearGradient id="line" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ff2bd6"/><stop offset=".5" stop-color="#00e5ff"/><stop offset="1" stop-color="#2f6bff" stop-opacity=".2"/></linearGradient>
+  <linearGradient id="beam" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".9"/></linearGradient>
+  <clipPath id="trk"><rect x="58" y="0" width="6" height="{{height}}"/></clipPath>
+  <filter id="neonf" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<rect width="1200" height="{{height}}" fill="#0d1117"/>
+<rect x="60" y="20" width="2" height="{{line_h}}" fill="url(#line)"/>
+<g clip-path="url(#trk)"><rect class="beam" x="58" y="0" width="6" height="60" fill="url(#beam)" opacity=".8"/></g>
+{{entries}}
+</svg>

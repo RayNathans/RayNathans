@@ -62,7 +62,7 @@ class SvgkitTests(unittest.TestCase):
 
     def test_load_data_structure(self):
         d = svgkit.load_data()
-        self.assertEqual(set(d), {"profile", "skills", "projects", "certs"})
+        self.assertEqual(set(d), {"profile", "skills", "projects", "certs", "stats", "timeline"})
         self.assertIsInstance(d["profile"]["current_job"], bool)
         for k in ("name", "handle", "role", "job", "stack", "links", "city", "learning", "motto"):
             self.assertIn(k, d["profile"])

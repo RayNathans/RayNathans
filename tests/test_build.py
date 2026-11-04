@@ -87,14 +87,14 @@ class HeroTests(unittest.TestCase):
         off = build.job_strings(fixtures.data(False)["profile"])
         self.assertEqual(off["strip_value"], "OPEN TO WORK")
         self.assertEqual(off["strip_label"], "STATUS")
-        self.assertEqual(off["timeline_when"], "2025-08 → 2026-02 · SURABAYA")
+        self.assertEqual(off["timeline_when"], "2025-08 – 2026-02 · SURABAYA")
         self.assertIn("[READY]", off["term_status"])
         self.assertEqual(off["about_now"], "Open to work · Full Stack")
         self.assertEqual(off["fact01"], "Backend Developer di Performa Optima Group (Ags 2025 – Feb 2026)")
         self.assertEqual(off["role_badge"], "FULL_STACK_DEV")
         self.assertTrue(off["fact02"].startswith("Pernah membangun"))
         on = build.job_strings(fixtures.data(True)["profile"])
-        self.assertEqual(on["timeline_when"], "2025-08 → NOW · SURABAYA")
+        self.assertEqual(on["timeline_when"], "2025-08 – NOW · SURABAYA")
         self.assertEqual(on["strip_value"], "PERFORMA OPTIMA GROUP")
         self.assertEqual(on["about_now"], "Backend Dev @ Performa Optima Group")
         self.assertEqual(on["role_badge"], "BACKEND_DEV")
@@ -173,6 +173,94 @@ class ProjectTests(unittest.TestCase):
         self.assertEqual(build.wrap_text("satu dua tiga", 7), ["satu", "dua", "tiga"])
 
 
+class StripTests(unittest.TestCase):
+    def test_cells(self):
+        s = build.build_strip(fixtures.data(True))
+        ET.fromstring(s)
+        for t in ("ROLE", "BACKEND_DEV", "COMPANY", "PERFORMA OPTIMA GROUP", "CERTS", "09 · DICODING", "FOLLOWERS", ">7<"):
+            self.assertTrue(t in s, f"teks hilang: {t}")
+        self.assertTrue(no_external(s))
+
+    def test_toggle(self):
+        s = build.build_strip(fixtures.data(False))
+        self.assertIn("STATUS", s)
+        self.assertIn("OPEN TO WORK", s)
+        self.assertIn("FULL_STACK_DEV", s)
+        self.assertNotIn("PERFORMA", s)
+
+
+class IdentityTests(unittest.TestCase):
+    def test_about_and_facts(self):
+        s = build.build_identity(fixtures.data(True))
+        ET.fromstring(s)
+        for t in ('"nama"', "Nikolaus Ray Nathan", '"sekarang"', "Backend Dev @ Performa Optima Group",
+                  '"stack"', "PostgreSQL", '"kopi"', "// selalu", "[01]", "[05]",
+                  "Backend Developer di Performa Optima", "(Ags 2025 – sekarang)",
+                  "9 sertifikat Dicoding", "about.json"):
+            self.assertTrue(t in s, f"teks hilang: {t}")
+        self.assertTrue(no_external(s))
+
+    def test_toggle_and_escape(self):
+        d = fixtures.data(False)
+        d["profile"]["learning"] = 'PWA & "arsitektur" <backend>'
+        s = build.build_identity(d)
+        ET.fromstring(s)
+        self.assertIn("Open to work · Full Stack", s)
+        self.assertIn("Pernah membangun", s)
+        self.assertIn("PWA &amp; &quot;arsitektur&quot; &lt;backend&gt;", s)
+
+
+class TelemetryTests(unittest.TestCase):
+    def test_numbers_from_stats(self):
+        d = fixtures.data(True)
+        s = build.build_telemetry(d)
+        ET.fromstring(s)
+        for t in ("GITHUB STATS", "STREAK", "TOP LANGUAGES", ">64<", ">67<", ">7<", ">5<", ">9<",
+                  "TypeScript", "49%", "Blade", "CSS", "2026-11-04 10:00 UTC", "2025-11-02 – 2026-11-04"):
+            self.assertTrue(t in s, f"teks hilang: {t}")
+        self.assertTrue(no_external(s))
+        self.assertNotIn("1,204", s)
+
+    def test_language_bar_widths_sum(self):
+        d = fixtures.data(True)
+        s = build.build_telemetry(d)
+        widths = [float(w) for w in re.findall(r'class="lang-seg"[^>]*width="([\d.]+)"', s)]
+        self.assertEqual(len(widths), 5)
+        self.assertAlmostEqual(sum(widths), build._LANG_BAR_W, delta=0.5)
+
+
+class TimelineTests(unittest.TestCase):
+    def test_entries(self):
+        d = fixtures.data(True)
+        s = build.build_timeline(d)
+        ET.fromstring(s)
+        for t in ("2025-08 – NOW · SURABAYA", "Backend Developer · Performa Optima Group",
+                  "Litera Sumbu Pakarti", "Dicoding Indonesia", "Menyelesaikan 9 kelas"):
+            self.assertTrue(t in s, f"teks hilang: {t}")
+        self.assertNotIn("→", s)
+        self.assertNotIn("{n_certs}", s)
+        self.assertTrue(no_external(s))
+
+    def test_toggle(self):
+        s = build.build_timeline(fixtures.data(False))
+        self.assertIn("2025-08 – 2026-02 · SURABAYA", s)
+        self.assertNotIn("NOW", s)
+
+
+class ConnectTests(unittest.TestCase):
+    def test_files(self):
+        files = build.build_connect(fixtures.data(True))
+        self.assertEqual(set(files), {"connect.svg", "btn-linkedin.svg", "btn-portfolio.svg", "btn-email.svg"})
+        for name, s in files.items():
+            ET.fromstring(s)
+            self.assertTrue(no_external(s), name)
+        self.assertIn("Terbuka untuk kolaborasi", files["connect.svg"])
+        self.assertIn("LINKEDIN", files["btn-linkedin.svg"])
+        self.assertIn("PORTFOLIO", files["btn-portfolio.svg"])
+        self.assertIn("EMAIL", files["btn-email.svg"])
+        self.assertIn("nikolausraynathan@gmail.com", files["btn-email.svg"])
+
+
 class GlyphTests(unittest.TestCase):
     """Fokus review #1: setiap karakter non-ASCII di SVG hasil build harus ada di font kelasnya."""
 
@@ -194,7 +282,10 @@ class GlyphTests(unittest.TestCase):
         svgs = [build.build_hero(d), build.build_footer(), build.build_skills(d["skills"])]
         svgs += [build.build_header(i, t) for i, t in build.SECTIONS]
         svgs += [build.build_project(p) for p in d["projects"]]
-        svgs.append(build.build_hero(fixtures.data(False)))
+        svgs += [build.build_strip(d), build.build_identity(d), build.build_telemetry(d), build.build_timeline(d)]
+        svgs += list(build.build_connect(d).values())
+        off = fixtures.data(False)
+        svgs += [build.build_hero(off), build.build_strip(off), build.build_identity(off), build.build_timeline(off)]
         for svg in svgs:
             self.assertEqual(glyph_violations(svg, self.cmaps), set())
 

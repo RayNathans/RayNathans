@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 76" width="100%" role="img" aria-label="{{aria}}">
+<style>
+{{style}}
+.dot{animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.val{animation:fadein .8s ease-out both}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+</style>
+<rect width="1200" height="76" fill="#0d1117"/>
+<rect x=".5" y="6.5" width="1199" height="63" fill="#0a0f24" stroke="#15214a"/>
+<rect x="0" y="6" width="1200" height="2" fill="#00e5ff" opacity=".6"/>
+{{cells}}
+</svg>

@@ -7,44 +7,11 @@
   <img src="{{typing_url}}" alt="terminal: whoami, cat about.json, ./deploy --prod, git push origin main">
 </p>
 
-<p align="center">
-  <img src="{{b_role}}" alt="Role: Backend Dev">
-  <img src="{{b_strip}}" alt="{{strip_label}}: {{strip_value}}">
-  <img src="{{b_certs}}" alt="Certs: {{cert_count}} Dicoding">
-  <img src="{{komarev}}" alt="Profile views">
-</p>
+<img src="assets/strip.svg" width="100%" alt="Status: role {{role_badge}}, {{strip_label}} {{strip_value}}, {{cert_count}} sertifikat Dicoding, followers">
 
 <img src="assets/h-01.svg" width="100%" alt="01 // IDENTITY">
 
-<table>
-<tr>
-<td width="60%" valign="top">
-
-```jsonc
-{
-  "nama": "{{name}}",
-  "peran": "{{role}}",
-  "sekarang": "{{about_now}}",
-  "basis": "{{city}}",
-  "stack": [{{stack_json}}],
-  "sedang_belajar": "{{learning}}",
-  "motto": "{{motto}}",
-  "kopi": true  // selalu
-}
-```
-
-</td>
-<td width="40%" valign="top">
-
-<p><code>[01]</code> {{fact01}}</p>
-<p><code>[02]</code> {{fact02}}</p>
-<p><code>[03]</code> Memimpin tim 3 developer di Litera Sumbu Pakarti</p>
-<p><code>[04]</code> {{cert_count}} sertifikat Dicoding: Front-End, Back-End, Web Intermediate</p>
-<p><code>[05]</code> Sedang mendalami PostgreSQL &amp; Python</p>
-
-</td>
-</tr>
-</table>
+<img src="assets/identity.svg" width="100%" alt="about.json: {{name}}, {{role}}, {{about_now}}, {{city}}. Fakta: {{fact01}}; {{fact02}}; memimpin tim 3 developer di Litera Sumbu Pakarti; {{cert_count}} sertifikat Dicoding; sedang mendalami PostgreSQL dan Python">
 
 <img src="assets/h-02.svg" width="100%" alt="02 // SKILL MATRIX">
 
@@ -64,16 +31,7 @@
 
 <img src="assets/h-04.svg" width="100%" alt="04 // TELEMETRY">
 
-<table>
-<tr>
-<td width="50%" valign="top"><img src="{{stats_url}}" width="100%" alt="GitHub stats RayNathans"></td>
-<td width="50%" valign="top"><img src="{{streak_url}}" width="100%" alt="Contribution streak RayNathans"></td>
-</tr>
-</table>
-
-<p align="center">
-  <img src="{{langs_url}}" alt="Top languages RayNathans">
-</p>
+<img src="assets/telemetry.svg" width="100%" alt="GitHub stats, contribution streak, dan top languages (diperbarui otomatis)">
 
 <p align="center"><code>&gt; DATA STREAM // contribution snake · auto-update via GitHub Actions</code></p>
 
@@ -83,12 +41,7 @@
 
 <img src="assets/h-05.svg" width="100%" alt="05 // TIMELINE.LOG">
 
-- **`{{timeline_when}}`** · **{{job_title}} · {{company}}**
-  <br>{{job_desc}}
-- **`2025-02 → 2025-08 · YOGYAKARTA`** · **Frontend Developer (Volunteer) · Litera Sumbu Pakarti**
-  <br>Sistem manajemen buku Yayasan Litera: peminjaman, donasi, inventaris. Memimpin tim 3 developer. Laravel/PHP.
-- **`2025-02 → 2025-05`** · **Dicoding Indonesia**
-  <br>Menyelesaikan {{cert_count}} kelas: dasar pemrograman sampai Back-End dan Web Intermediate.
+<img src="assets/timeline.svg" width="100%" alt="Timeline: {{timeline_when}} {{job_title}} di {{company}}; 2025-02 sampai 2025-08 Frontend Developer (Volunteer) di Litera Sumbu Pakarti, Yogyakarta; 2025 Dicoding Indonesia {{cert_count}} kelas">
 
 <details>
 <summary><b>ACCESS CERTIFICATES [{{cert_count2}}]</b> · klik untuk membuka</summary>
@@ -100,12 +53,12 @@
 
 <img src="assets/h-06.svg" width="100%" alt="06 // ESTABLISH CONNECTION">
 
-<p align="center">Terbuka untuk kolaborasi proyek web, open source, atau tukar ide soal Laravel dan Next.js.</p>
+<img src="assets/connect.svg" width="100%" alt="Terbuka untuk kolaborasi proyek web, open source, atau tukar ide soal Laravel dan Next.js.">
 
 <p align="center">
-  <a href="{{linkedin}}"><img src="{{b_linkedin}}" alt="LinkedIn"></a>
-  <a href="{{portfolio}}"><img src="{{b_portfolio}}" alt="Portfolio"></a>
-  <a href="mailto:{{email}}"><img src="{{b_email}}" alt="Email"></a>
+  <a href="{{linkedin}}"><img src="assets/btn-linkedin.svg" width="240" height="56" alt="LinkedIn"></a>
+  <a href="{{portfolio}}"><img src="assets/btn-portfolio.svg" width="240" height="56" alt="Portfolio"></a>
+  <a href="mailto:{{email}}"><img src="assets/btn-email.svg" width="240" height="56" alt="Email"></a>
 </p>
 
 <img src="assets/footer.svg" width="100%" alt="END OF TRANSMISSION · thanks for visiting · stay curious · ship clean code">

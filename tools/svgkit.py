@@ -141,5 +141,5 @@ def render(template_name: str, **vars: str) -> str:
 def load_data() -> dict:
     return {
         name: json.loads((DATA / f"{name}.json").read_text(encoding="utf-8"))
-        for name in ("profile", "skills", "projects", "certs")
+        for name in ("profile", "skills", "projects", "certs", "stats", "timeline")
     }
