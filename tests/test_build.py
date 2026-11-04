@@ -59,5 +59,29 @@ class HeroTests(unittest.TestCase):
         self.assertEqual(on["about_now"], "Backend Dev @ Performa Optima Group")
 
 
+class HeaderFooterTests(unittest.TestCase):
+    def test_header_content(self):
+        s = build.build_header("02", "SKILL MATRIX")
+        ET.fromstring(s)
+        self.assertIn("02 //", s)
+        self.assertIn("SKILL MATRIX", s)
+        self.assertIn("sweep", s)
+        self.assertTrue(no_external(s))
+
+    def test_six_sections(self):
+        self.assertEqual(
+            [t for _, t in build.SECTIONS],
+            ["IDENTITY", "SKILL MATRIX", "MISSION LOGS", "TELEMETRY", "TIMELINE.LOG", "ESTABLISH CONNECTION"],
+        )
+        self.assertEqual([i for i, _ in build.SECTIONS], ["01", "02", "03", "04", "05", "06"])
+
+    def test_footer(self):
+        s = build.build_footer()
+        ET.fromstring(s)
+        self.assertIn("END OF TRANSMISSION", s)
+        self.assertIn("ship clean code", s)
+        self.assertTrue(no_external(s))
+
+
 if __name__ == "__main__":
     unittest.main()

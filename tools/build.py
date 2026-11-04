@@ -109,6 +109,31 @@ def build_hero(data: dict) -> str:
     )
 
 
+# ---------------------------------------------------------------- judul seksi & footer
+SECTIONS: list[tuple[str, str]] = [
+    ("01", "IDENTITY"),
+    ("02", "SKILL MATRIX"),
+    ("03", "MISSION LOGS"),
+    ("04", "TELEMETRY"),
+    ("05", "TIMELINE.LOG"),
+    ("06", "ESTABLISH CONNECTION"),
+]
+
+
+def build_header(idx: str, title: str) -> str:
+    return svgkit.render(
+        "header.svg",
+        style=svgkit.base_style(),
+        idx=esc(idx),
+        title=esc(title),
+        title_x="104",
+    )
+
+
+def build_footer() -> str:
+    return svgkit.render("footer.svg", style=svgkit.base_style())
+
+
 # ---------------------------------------------------------------- output
 def write(name: str, content: str, out: Path | None = None) -> Path:
     root = out or svgkit.ROOT
@@ -121,6 +146,9 @@ def write(name: str, content: str, out: Path | None = None) -> Path:
 def main(out: Path | None = None) -> None:
     data = svgkit.load_data()
     write("hero.svg", build_hero(data), out)
+    for idx, title in SECTIONS:
+        write(f"h-{idx}.svg", build_header(idx, title), out)
+    write("footer.svg", build_footer(), out)
     print("build selesai")
 
 

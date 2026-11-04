@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 64" width="100%" role="img" aria-label="{{idx}} // {{title}}">
+<style>
+{{style}}
+.sweep{animation:sweep 4s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes sweep{0%{transform:translateX(-160px);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateX(1200px);opacity:0}}
+.blip{animation:blip 2s ease-in-out infinite}
+@keyframes blip{0%,100%{opacity:1}50%{opacity:.2}}
+</style>
+<defs>
+  <linearGradient id="beam" x1="0" x2="1"><stop offset="0" stop-color="#00e5ff" stop-opacity="0"/><stop offset=".5" stop-color="#00e5ff"/><stop offset="1" stop-color="#00e5ff" stop-opacity="0"/></linearGradient>
+  <clipPath id="track"><rect x="0" y="50" width="1200" height="4"/></clipPath>
+</defs>
+<rect width="1200" height="64" fill="#03040d"/>
+<path d="M0 10 L0 0 L10 0" fill="none" stroke="#00e5ff" stroke-width="2"/>
+<rect x="0" y="52" width="1200" height="1" fill="#2f6bff" opacity=".7"/>
+<g clip-path="url(#track)"><rect class="sweep" x="0" y="50" width="160" height="4" fill="url(#beam)"/></g>
+<text x="16" y="38" class="mono" font-size="20" fill="#ff2bd6" letter-spacing="2">{{idx}} //</text>
+<text x="{{title_x}}" y="38" class="orb" font-size="26" fill="#dbe7ff" letter-spacing="3">{{title}}</text>
+<rect class="blip" x="1188" y="22" width="6" height="6" fill="#00e5ff"/>
+<rect class="blip" x="1178" y="22" width="6" height="6" fill="#00e5ff" opacity=".5" style="animation-delay:-.7s"/>
+<rect class="blip" x="1168" y="22" width="6" height="6" fill="#00e5ff" opacity=".25" style="animation-delay:-1.4s"/>
+</svg>
