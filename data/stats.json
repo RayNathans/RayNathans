@@ -1,0 +1,51 @@
+{
+  "updated": "2026-11-04 10:05 UTC",
+  "since": "2024-02",
+  "followers": 0,
+  "public_repos": 4,
+  "stars": 0,
+  "commits": 64,
+  "prs": 0,
+  "issues": 0,
+  "contrib_year": 13,
+  "streak": {
+    "total": 13,
+    "current": 1,
+    "longest": 1,
+    "current_range": "2026-11-04 – 2026-11-04",
+    "longest_range": "2026-11-04 – 2026-11-04",
+    "range": "2025-11-02 – 2026-11-04"
+  },
+  "languages": [
+    {
+      "name": "TypeScript",
+      "bytes": 711425,
+      "pct": 49,
+      "color": "#3178c6"
+    },
+    {
+      "name": "Blade",
+      "bytes": 396640,
+      "pct": 28,
+      "color": "#f7523f"
+    },
+    {
+      "name": "PHP",
+      "bytes": 302463,
+      "pct": 21,
+      "color": "#4F5D95"
+    },
+    {
+      "name": "JavaScript",
+      "bytes": 14447,
+      "pct": 1,
+      "color": "#f1e05a"
+    },
+    {
+      "name": "CSS",
+      "bytes": 9943,
+      "pct": 1,
+      "color": "#663399"
+    }
+  ]
+}
