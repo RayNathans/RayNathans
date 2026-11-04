@@ -10,7 +10,7 @@
 <p align="center">
   <img src="{{b_role}}" alt="Role: Backend Dev">
   <img src="{{b_strip}}" alt="{{strip_label}}: {{strip_value}}">
-  <img src="{{b_certs}}" alt="Certs: 9 Dicoding">
+  <img src="{{b_certs}}" alt="Certs: {{cert_count}} Dicoding">
   <img src="{{komarev}}" alt="Profile views">
 </p>
 
@@ -37,9 +37,9 @@
 <td width="40%" valign="top">
 
 <p><code>[01]</code> {{fact01}}</p>
-<p><code>[02]</code> Membangun aplikasi PWA untuk otomasi laporan teknisi</p>
+<p><code>[02]</code> {{fact02}}</p>
 <p><code>[03]</code> Memimpin tim 3 developer di Litera Sumbu Pakarti</p>
-<p><code>[04]</code> 9 sertifikat Dicoding: Front-End, Back-End, Web Intermediate</p>
+<p><code>[04]</code> {{cert_count}} sertifikat Dicoding: Front-End, Back-End, Web Intermediate</p>
 <p><code>[05]</code> Sedang mendalami PostgreSQL &amp; Python</p>
 
 </td>
@@ -88,10 +88,10 @@
 - **`2025-02 → 2025-08 · YOGYAKARTA`** · **Frontend Developer (Volunteer) · Litera Sumbu Pakarti**
   <br>Sistem manajemen buku Yayasan Litera: peminjaman, donasi, inventaris. Memimpin tim 3 developer. Laravel/PHP.
 - **`2025-02 → 2025-05`** · **Dicoding Indonesia**
-  <br>Menyelesaikan 9 kelas: dasar pemrograman sampai Back-End dan Web Intermediate.
+  <br>Menyelesaikan {{cert_count}} kelas: dasar pemrograman sampai Back-End dan Web Intermediate.
 
 <details>
-<summary><b>ACCESS CERTIFICATES [09]</b> · klik untuk membuka</summary>
+<summary><b>ACCESS CERTIFICATES [{{cert_count2}}]</b> · klik untuk membuka</summary>
 <br>
 
 {{cert_list}}

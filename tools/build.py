@@ -38,6 +38,8 @@ def job_strings(profile: dict) -> dict:
             "term_status": "status: building PWA for field technicians [RUNNING]",
             "about_now": f"Backend Dev @ {job['company']}",
             "fact01": f"{job['title']} di {job['company']} ({_bulan_id(job['start'])} – sekarang)",
+            "fact02": "Membangun aplikasi PWA untuk otomasi laporan teknisi",
+            "role_badge": "BACKEND_DEV",
         }
     return {
         "timeline_when": f"{job['start']} → {job['end']} · {job['city']}",
@@ -46,7 +48,15 @@ def job_strings(profile: dict) -> dict:
         "term_status": "status: open for new missions [READY]",
         "about_now": "Open to work · Full Stack",
         "fact01": f"{job['title']} di {job['company']} ({_bulan_id(job['start'])} – {_bulan_id(job['end'])})",
+        "fact02": "Pernah membangun aplikasi PWA untuk otomasi laporan teknisi",
+        "role_badge": "FULL_STACK_DEV",
     }
+
+
+def _finish(svg: str) -> str:
+    """Validasi akhir setiap SVG: semua glyph harus ada di font yang di-embed."""
+    svgkit.check_glyphs(svg)
+    return svg
 
 
 # ---------------------------------------------------------------- hero
@@ -99,16 +109,23 @@ def _hero_rain(rng: random.Random, n: int = 40) -> str:
 
 def build_hero(data: dict) -> str:
     rng = random.Random(7)
-    js = job_strings(data["profile"])
-    return svgkit.render(
+    p = data["profile"]
+    js = job_strings(p)
+    first, _, rest = p["name"].upper().partition(" ")
+    return _finish(svgkit.render(
         "hero.svg",
         style=svgkit.base_style(),
         avatar=svgkit.avatar_data_uri(),
+        name_first=esc(first),
+        name_rest=esc(rest or first),
+        name_full=esc(p["name"]),
+        role_full=esc(p["role"]),
+        stack_lower=esc(", ".join(s.lower() for s in p["stack"])),
         term_status=esc(js["term_status"]),
         buildings=_hero_buildings(),
         windows=_hero_windows(rng),
         rain=_hero_rain(rng),
-    )
+    ))
 
 
 # ---------------------------------------------------------------- judul seksi & footer
@@ -123,17 +140,17 @@ SECTIONS: list[tuple[str, str]] = [
 
 
 def build_header(idx: str, title: str) -> str:
-    return svgkit.render(
+    return _finish(svgkit.render(
         "header.svg",
         style=svgkit.base_style(),
         idx=esc(idx),
         title=esc(title),
         title_x="104",
-    )
+    ))
 
 
 def build_footer() -> str:
-    return svgkit.render("footer.svg", style=svgkit.base_style())
+    return _finish(svgkit.render("footer.svg", style=svgkit.base_style()))
 
 
 # ---------------------------------------------------------------- skill matrix
@@ -173,13 +190,13 @@ def build_skills(skills: list[dict]) -> str:
             + f'<text class="pct mono" x="{bar_x + _SK_SEGS * (_SK_SEG_W + _SK_SEG_GAP) + 8}" y="{y + 25}" '
             f'font-size="14" fill="{PALETTE["c1"]}" style="--d:{(i * 60 + on * 40) / 1000:.2f}s">{sk["pct"]}%</text>'
         )
-    return svgkit.render(
+    return _finish(svgkit.render(
         "skills.svg",
         style=svgkit.base_style(),
         height=str(height),
         names=esc(", ".join(s["name"] for s in skills)),
         rows="\n".join(rows),
-    )
+    ))
 
 
 # ---------------------------------------------------------------- kartu proyek
@@ -222,7 +239,7 @@ def build_project(p: dict) -> str:
     st_color = PALETTE["ok"] if p["status"] == "DEPLOYED" else PALETTE["c3"]
     st_w = 7 * len(p["status"]) + 18
     st_x = 400 - 12 - st_w
-    return svgkit.render(
+    return _finish(svgkit.render(
         "project.svg",
         style=svgkit.base_style(),
         art=art,
@@ -236,7 +253,7 @@ def build_project(p: dict) -> str:
         st_x=str(st_x),
         st_tx=f"{st_x + st_w / 2:.0f}",
         id_label=esc(f"MISSION // {p['id'].upper()}"),
-    )
+    ))
 
 
 # ---------------------------------------------------------------- README
@@ -307,11 +324,15 @@ def build_readme(data: dict) -> str:
         for c in data["certs"]
     )
     cert_list = "<ul>\n" + cert_list + "\n</ul>"
+    n_certs = len(data["certs"])
     vals = dict(
         typing_url=typing_url(),
-        b_role=badge("ROLE", "BACKEND_DEV", PALETTE["c1"][1:]),
+        b_role=badge("ROLE", js["role_badge"], PALETTE["c1"][1:]),
         b_strip=badge(js["strip_label"], js["strip_value"], PALETTE["c2"][1:]),
-        b_certs=badge("CERTS", "09 · DICODING", PALETTE["c3"][1:]),
+        b_certs=badge("CERTS", f"{n_certs:02d} · DICODING", PALETTE["c3"][1:]),
+        cert_count=str(n_certs),
+        cert_count2=f"{n_certs:02d}",
+        fact02=js["fact02"],
         strip_label=js["strip_label"],
         strip_value=js["strip_value"],
         name=p["name"],

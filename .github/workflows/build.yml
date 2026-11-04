@@ -12,6 +12,11 @@ on:
 permissions:
   contents: write
 
+# Dua push data berdekatan tidak boleh saling menimpa saat commit hasil build.
+concurrency:
+  group: build-assets
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,11 +30,13 @@ jobs:
       - name: Install dependencies
         run: python -m pip install "fonttools[woff]" brotli pillow pyyaml
 
-      - name: Test
-        run: python -m unittest
-
+      # Build dulu: test membandingkan aset yang di-commit dengan build segar,
+      # dan tugas workflow ini justru menyamakan keduanya.
       - name: Build assets and README
         run: python tools/build.py
+
+      - name: Test
+        run: python -m unittest
 
       - name: Commit rebuilt assets
         run: |
@@ -40,5 +47,6 @@ jobs:
             echo "tidak ada perubahan"
           else
             git commit -m "Build ulang aset"
+            git pull --rebase origin main
             git push
           fi

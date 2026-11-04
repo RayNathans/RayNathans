@@ -1,7 +1,5 @@
-import glob
-import io
-import os
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -34,40 +32,49 @@ class SvgkitTests(unittest.TestCase):
     def test_avatar_uri(self):
         self.assertTrue(svgkit.avatar_data_uri().startswith("data:image/jpeg;base64,"))
 
-    def test_base_style_has_reduced_motion(self):
+    def test_base_style_reduced_motion_keeps_content_visible(self):
         css = svgkit.base_style()
-        self.assertIn("prefers-reduced-motion", css)
         self.assertIn(".c1{fill:#00e5ff}", css)
+        block = css.split("@media (prefers-reduced-motion: reduce)")[1]
+        self.assertIn("animation:none!important", block)
+        # elemen yang awalnya tersembunyi harus dipaksa tampil saat animasi dimatikan
+        self.assertIn("opacity:1!important", block)
+        self.assertIn("clip-path:none!important", block)
+        for cls in (".seg.on", ".pct", ".out1", ".out2", ".typed"):
+            self.assertIn(cls, block, cls)
 
     def test_render_rejects_missing_var(self):
-        probe = svgkit.TEMPLATES / "_probe.svg"
-        probe.write_text("<svg>{{a}} {{b}}</svg>", encoding="utf-8")
-        try:
-            with self.assertRaises(KeyError):
-                svgkit.render("_probe.svg", a="1")
-            self.assertEqual(svgkit.render("_probe.svg", a="1", b="2"), "<svg>1 2</svg>")
-        finally:
-            probe.unlink()
+        orig = svgkit.TEMPLATES
+        with tempfile.TemporaryDirectory() as tmp:
+            svgkit.TEMPLATES = Path(tmp)
+            (Path(tmp) / "_probe.svg").write_text("<svg>{{a}} {{b}}</svg>", encoding="utf-8")
+            try:
+                with self.assertRaises(KeyError):
+                    svgkit.render("_probe.svg", a="1")
+                self.assertEqual(svgkit.render("_probe.svg", a="1", b="2"), "<svg>1 2</svg>")
+            finally:
+                svgkit.TEMPLATES = orig
 
-    def test_subset_covers_template_glyphs(self):
-        from fontTools.ttLib import TTFont
+    def test_glyph_check(self):
+        self.assertEqual(svgkit.unsupported_glyphs("A · B", "Share Tech Mono"), set())
+        self.assertEqual(svgkit.unsupported_glyphs("A · B", "Orbitron"), {"·"})
+        self.assertEqual(svgkit.unsupported_glyphs("A → B", "Share Tech Mono"), {"→"})
 
-        cmap = set()
-        for f in ("Orbitron-subset.woff2", "ShareTechMono-subset.woff2"):
-            cmap |= set(TTFont(ROOT / "fonts" / f).getBestCmap())
-        missing = set()
-        for path in glob.glob(str(svgkit.TEMPLATES / "*.svg")):
-            text = Path(path).read_text(encoding="utf-8")
-            missing |= {ch for ch in text if ord(ch) > 0x7E and ord(ch) not in cmap}
-        self.assertEqual(missing, set(), f"glyph tanpa font: {sorted(missing)}")
-
-    def test_load_data_keys(self):
+    def test_load_data_structure(self):
         d = svgkit.load_data()
         self.assertEqual(set(d), {"profile", "skills", "projects", "certs"})
-        self.assertEqual(len(d["skills"]), 12)
-        self.assertEqual(len(d["certs"]), 9)
-        self.assertEqual(len(d["projects"]), 3)
-        self.assertTrue(d["profile"]["current_job"])
+        self.assertIsInstance(d["profile"]["current_job"], bool)
+        for k in ("name", "handle", "role", "job", "stack", "links", "city", "learning", "motto"):
+            self.assertIn(k, d["profile"])
+        self.assertGreaterEqual(len(d["skills"]), 1)
+        for s in d["skills"]:
+            self.assertTrue(0 <= s["pct"] <= 100, s)
+            self.assertTrue({"logo", "color", "url"} <= set(s["badge"]), s)
+        for p in d["projects"]:
+            self.assertTrue({"id", "title", "status", "desc", "stack", "live", "art"} <= set(p), p)
+            self.assertTrue((svgkit.TEMPLATES / p["art"]).exists(), p["art"])
+        for c in d["certs"]:
+            self.assertTrue({"id", "title", "date"} <= set(c), c)
 
 
 if __name__ == "__main__":

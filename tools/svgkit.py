@@ -73,8 +73,58 @@ def base_style() -> str:
         + colors
         + "\n.mono{font-family:'Share Tech Mono',monospace}"
         + ".orb{font-family:Orbitron,sans-serif;font-weight:900}"
-        + "\n@media (prefers-reduced-motion: reduce){*{animation:none!important}}"
+        # Saat animasi dimatikan, elemen yang keadaan awalnya tersembunyi
+        # (menunggu animasi) harus langsung tampil penuh.
+        + "\n@media (prefers-reduced-motion: reduce){*{animation:none!important}"
+        + ".seg.on,.pct,.out1,.out2{opacity:1!important}.typed{clip-path:none!important}}"
     )
+
+
+_cmap_cache: dict[str, set] = {}
+
+
+def _cmap(family: str) -> set:
+    if family not in _cmap_cache:
+        from fontTools.ttLib import TTFont
+
+        fname = next(f for fam, f, _ in _FONT_FILES if fam == family)
+        _cmap_cache[family] = set(TTFont(FONTS / fname).getBestCmap())
+    return _cmap_cache[family]
+
+
+def unsupported_glyphs(text: str, family: str) -> set:
+    """Karakter non-ASCII di `text` yang tidak punya glyph di font `family`."""
+    cmap = _cmap(family)
+    return {ch for ch in text if ord(ch) > 0x7E and not ch.isspace() and ord(ch) not in cmap}
+
+
+def check_glyphs(svg: str) -> None:
+    """Tolak SVG yang teksnya memakai karakter di luar subset font kelasnya.
+
+    Font ditentukan dari class: 'orb' → Orbitron, 'mono' → Share Tech Mono
+    (bawaan). Kelas diwarisi ke elemen anak."""
+    import xml.etree.ElementTree as ET
+
+    ns = "{http://www.w3.org/2000/svg}"
+    bad: set = set()
+
+    def walk(el, family):
+        cls = el.get("class", "").split()
+        if "orb" in cls:
+            family = "Orbitron"
+        elif "mono" in cls:
+            family = "Share Tech Mono"
+        if el.tag in (ns + "text", ns + "tspan", ns + "g"):
+            for chunk in (el.text or "",) + tuple(c.tail or "" for c in el):
+                bad.update((family, ch) for ch in unsupported_glyphs(chunk, family))
+        for c in el:
+            walk(c, family)
+
+    walk(ET.fromstring(svg), "Share Tech Mono")
+    if bad:
+        raise ValueError(
+            "karakter tanpa glyph di font: " + ", ".join(f"{f}: {ch!r}" for f, ch in sorted(bad))
+        )
 
 
 def render(template_name: str, **vars: str) -> str:
