@@ -45,15 +45,31 @@ Gambar `github-snake.svg` dibuat oleh workflow `snake` dan disimpan di cabang
    terbentuk dan gambar muncul (cache GitHub bisa menunda beberapa menit).
 3. Selanjutnya otomatis tiap 12 jam dan tiap push ke `main`.
 
+## 3b. Statistik Telemetry (stats sendiri, tanpa layanan luar)
+
+Panel GITHUB STATS, CONTRIBUTION STREAK, dan TOP LANGUAGES digambar dari
+`data/stats.json`. File itu diisi `tools/fetch_stats.py` dari API publik GitHub
+(followers, repo, stars, commit publik, PR, issue, byte per bahasa di repo milik
+sendiri) dan halaman kontribusi publik (kalender 12 bulan untuk streak).
+
+- Workflow **stats** menjalankannya tiap 12 jam dan meng-commit `data/stats.json`
+  beserta aset yang berubah. Bisa juga dipicu manual dari tab Actions.
+- Angka yang tampil adalah yang terlihat publik. Kontribusi di repo privat
+  organisasi tidak dihitung kecuali Anda mengaktifkan "Include private
+  contributions on my profile" di Settings → Public profile.
+- Memperbarui lokal: `.venv/Scripts/python.exe tools/fetch_stats.py` lalu build.
+
 ## 4. Mengubah isi
 
 | Ingin mengubah | Edit | Lalu |
 |---|---|---|
 | Angka skill, urutan, logo | `data/skills.json` | `python tools/build.py` |
 | Proyek (judul, deskripsi, stack, link) | `data/projects.json` (ilustrasi di `tools/templates/proj-art-<id>.svg`) | build |
-| Sertifikat | `data/certs.json` | build |
+| Sertifikat (jumlahnya ikut berubah di strip, fakta, timeline, dropdown) | `data/certs.json` | build |
 | Nama, motto, link, email | `data/profile.json` | build |
-| **Sudah tidak di Performa Optima Group** | `data/profile.json` → `"current_job": false` | build; lima tempat berubah sekaligus: timeline, badge COMPANY → STATUS: OPEN TO WORK, baris terminal hero, `sekarang` di about.json, fakta `[01]` |
+| Entri timeline selain pekerjaan sekarang | `data/timeline.json` | build |
+| Kalimat ajakan di seksi 06 | `_CONNECT_TEXT` di `tools/build.py` | build |
+| **Sudah tidak di Performa Optima Group** | `data/profile.json` → `"current_job": false` | build; yang berubah sekaligus: timeline, sel COMPANY → STATUS: OPEN TO WORK, sel ROLE → FULL_STACK_DEV, baris terminal hero, `sekarang` di about.json, fakta `[01]` dan `[02]` |
 
 Cara build lokal (sekali siapkan lingkungan):
 
@@ -81,11 +97,13 @@ konfigurasi git Anda). Untuk menyembunyikannya, kosongkan `links.email` di
 | Layanan | Untuk | Catatan |
 |---|---|---|
 | readme-typing-svg.demolab.com | baris terminal mengetik | tanpa akun |
-| github-readme-stats.vercel.app | stats + top languages | instance publik kadang 503 (rate limit); bila sering kosong, deploy sendiri ke Vercel sesuai README proyeknya dan ganti host di `tools/build.py` |
-| streak-stats.demolab.com | streak | tanpa akun |
-| komarev.com | profile views | tanpa akun |
-| img.shields.io | badge | tanpa akun |
+| img.shields.io | badge logo teknologi di bawah skill matrix | tanpa akun |
+| api.github.com + github.com/users/RayNathans/contributions | data Telemetry (lihat 3b) | tanpa akun; di Actions memakai token bawaan |
 | Platane/snk (GitHub Action) | snake | token bawaan Actions |
+
+Yang sengaja tidak dipakai lagi sejak tahap 2: github-readme-stats dan streak-stats
+(instance publiknya sering 503 dan tampilannya tidak bisa disamakan dengan mockup)
+serta penghitung profile views komarev (nilainya tidak bisa dibawa ke dalam SVG).
 
 ## 7. Font dan lisensi
 

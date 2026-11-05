@@ -69,6 +69,22 @@ class RepoTests(unittest.TestCase):
         self.assertLess(i_test, i_commit)
         self.assertIn("concurrency", bld)
 
+    def test_stats_workflow(self):
+        """stats.yml: terjadwal, bisa dipicu manual, fetch → build → test → commit dengan pull --rebase."""
+        import yaml
+
+        txt = (ROOT / ".github/workflows/stats.yml").read_text(encoding="utf-8")
+        wf = yaml.safe_load(txt)
+        on = wf[True] if True in wf else wf["on"]
+        self.assertIn("schedule", on)
+        self.assertIn("workflow_dispatch", on)
+        names = [s.get("name", "") for s in wf["jobs"]["stats"]["steps"]]
+        order = [next(i for i, n in enumerate(names) if n.startswith(p)) for p in ("Fetch", "Build", "Test", "Commit")]
+        self.assertEqual(order, sorted(order))
+        self.assertIn("GITHUB_TOKEN", txt)
+        self.assertIn("pull --rebase", txt)
+        self.assertIn("concurrency", wf)
+
     def test_no_attribution_markers_in_history(self):
         log = subprocess.run(["git", "log", "--format=%B"], cwd=ROOT, capture_output=True, text=True).stdout
         self.assertNotIn("Co-Authored-By", log)
@@ -76,8 +92,12 @@ class RepoTests(unittest.TestCase):
 
     def test_handoff_doc(self):
         doc = (ROOT / "docs/SERAH-TERIMA.md").read_text(encoding="utf-8")
-        for s in ["RayNathans/RayNathans", "Public profile", "current_job", "nikolausraynathan@gmail.com", "OFL", "snake"]:
+        for s in ["RayNathans/RayNathans", "Public profile", "current_job", "nikolausraynathan@gmail.com", "OFL", "snake",
+                  "fetch_stats", "stats.json", "timeline.json"]:
             self.assertIn(s, doc)
+        # layanan lama tidak boleh lagi tercantum sebagai layanan yang dipakai
+        self.assertNotIn("komarev.com | profile views", doc)
+        self.assertNotIn("github-readme-stats.vercel.app | stats", doc)
 
 
 if __name__ == "__main__":

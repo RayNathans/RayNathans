@@ -316,15 +316,34 @@ class ReadmeTests(unittest.TestCase):
 
     def test_sections_and_assets(self):
         for a in [
-            "assets/hero.svg", "assets/h-01.svg", "assets/h-02.svg", "assets/h-03.svg", "assets/h-04.svg",
-            "assets/h-05.svg", "assets/h-06.svg", "assets/skills.svg", "assets/proj-fruch.svg",
-            "assets/proj-story.svg", "assets/proj-pos.svg", "assets/footer.svg",
-            "readme-typing-svg.demolab.com", "github-readme-stats.vercel.app/api?username=RayNathans",
-            "api/top-langs/?username=RayNathans", "streak-stats.demolab.com?user=RayNathans",
+            "assets/hero.svg", "assets/strip.svg", "assets/h-01.svg", "assets/identity.svg", "assets/h-02.svg",
+            "assets/skills.svg", "assets/h-03.svg", "assets/proj-fruch.svg", "assets/proj-story.svg",
+            "assets/proj-pos.svg", "assets/h-04.svg", "assets/telemetry.svg", "assets/h-05.svg",
+            "assets/timeline.svg", "assets/h-06.svg", "assets/connect.svg", "assets/btn-linkedin.svg",
+            "assets/btn-portfolio.svg", "assets/btn-email.svg", "assets/footer.svg",
+            "readme-typing-svg.demolab.com",
             "raw.githubusercontent.com/RayNathans/RayNathans/output/github-snake.svg",
-            "komarev.com/ghpvc/?username=RayNathans",
         ]:
             self.assertTrue(a in self.md, f"hilang: {a}")
+        # urutan seksi mengikuti mockup
+        pos = [self.md.index(a) for a in ("assets/hero.svg", "assets/strip.svg", "assets/identity.svg",
+                                           "assets/skills.svg", "assets/proj-fruch.svg", "assets/telemetry.svg",
+                                           "assets/timeline.svg", "assets/connect.svg", "assets/footer.svg")]
+        self.assertEqual(pos, sorted(pos))
+
+    def test_no_third_party_cards(self):
+        for s in ("github-readme-stats", "streak-stats", "komarev", "img.shields.io/badge/ROLE",
+                  "img.shields.io/badge/COMPANY", "img.shields.io/badge/STATUS", "img.shields.io/badge/CERTS",
+                  "img.shields.io/badge/LINKEDIN", "```"):
+            self.assertFalse(s in self.md, f"masih ada: {s}")
+
+    def test_buttons_wrapped_in_links(self):
+        for btn, href in (("btn-linkedin", "https://www.linkedin.com/in/nikolaus-ray-nathan/"),
+                          ("btn-portfolio", "https://nathporto.netlify.app/"),
+                          ("btn-email", "mailto:nikolausraynathan@gmail.com")):
+            m = re.search(rf'<a href="([^"]+)"><img src="assets/{btn}\.svg"', self.md)
+            self.assertIsNotNone(m, btn)
+            self.assertEqual(m.group(1), href)
 
     def test_links(self):
         self.assertNotIn('href="#"', self.md)
@@ -338,24 +357,21 @@ class ReadmeTests(unittest.TestCase):
 
     def test_certs_count_follows_data(self):
         self.assertEqual(self.md.count("https://www.dicoding.com/certificates/"), 9)
-        self.assertIn("Belajar Pengembangan Web Intermediate", self.md)
-        self.assertIn("ACCESS CERTIFICATES [09]", self.md)
-        self.assertIn("CERTS-09", self.md)
-        self.assertIn("9 sertifikat Dicoding", self.md)
+        self.assertTrue("Belajar Pengembangan Web Intermediate" in self.md)
+        self.assertTrue("ACCESS CERTIFICATES [09]" in self.md)
+        self.assertTrue("9 sertifikat Dicoding" in self.md)
         d = copy.deepcopy(self.d)
         d["certs"].append({"id": "ZZZZ", "title": "Kelas Baru", "date": "2026-01-01"})
         md = build.build_readme(d)
-        self.assertIn("ACCESS CERTIFICATES [10]", md)
-        self.assertIn("CERTS-10", md)
-        self.assertIn("10 sertifikat Dicoding", md)
+        self.assertTrue("ACCESS CERTIFICATES [10]" in md)
+        self.assertTrue("10 sertifikat Dicoding" in md)
         self.assertEqual(md.count("https://www.dicoding.com/certificates/"), 10)
+        self.assertTrue("10 · DICODING" in build.build_strip(d))
 
-    def test_about_and_facts(self):
-        self.assertIn('"sekarang": "Backend Dev @ Performa Optima Group"', self.md)
-        self.assertIn('"kopi": true', self.md)
-        self.assertIn("sertifikat Dicoding: Front-End, Back-End, Web Intermediate", self.md)
-        self.assertIn("2025-08 → NOW · SURABAYA", self.md)
-        self.assertIn("ROLE-BACKEND__DEV", self.md)
+    def test_alt_texts_carry_content(self):
+        for s in ("Backend Dev @ Performa Optima Group", "(Ags 2025 – sekarang)", "2025-08 – NOW · SURABAYA",
+                  "role BACKEND_DEV", "COMPANY PERFORMA OPTIMA GROUP"):
+            self.assertTrue(s in self.md, f"hilang: {s}")
 
     def test_no_loc_uptime_no_coffee_no_fake_numbers(self):
         self.assertNotIn("UPTIME", self.md)
@@ -370,14 +386,11 @@ class ReadmeTests(unittest.TestCase):
 
     def test_current_job_toggle_changes_all_places(self):
         md = build.build_readme(fixtures.data(False))
-        self.assertIn("STATUS-OPEN%20TO%20WORK", md)
-        self.assertIn("2025-08 → 2026-02 · SURABAYA", md)
-        self.assertIn('"sekarang": "Open to work · Full Stack"', md)
-        self.assertIn("(Ags 2025 – Feb 2026)", md)
-        self.assertIn("ROLE-FULL__STACK__DEV", md)
-        self.assertIn("Pernah membangun", md)
-        self.assertNotIn("COMPANY-PERFORMA%20OPTIMA%20GROUP", md)
-        self.assertNotIn("ROLE-BACKEND__DEV", md)
+        for s in ("STATUS OPEN TO WORK", "2025-08 – 2026-02 · SURABAYA", "Open to work · Full Stack",
+                  "(Ags 2025 – Feb 2026)", "role FULL_STACK_DEV", "Pernah membangun"):
+            self.assertTrue(s in md, f"hilang: {s}")
+        for s in ("PERFORMA OPTIMA GROUP", "BACKEND_DEV", "NOW"):
+            self.assertFalse(s in md, f"masih ada: {s}")
 
 
 if __name__ == "__main__":
